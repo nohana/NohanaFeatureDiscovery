@@ -12,12 +12,12 @@ class FabFeatureDiscoveryView @JvmOverloads constructor(context: Context, attrs:
     private var fab: FloatingActionButton? = null
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.merge_fab_feature_dicovery, this)
+        LayoutInflater.from(context).inflate(R.layout.merge_fab_feature_dicovery_, this)
     }
 
     override fun onViewAdded(child: View) {
         super.onViewAdded(child)
-        if (child.id == R.id.fab) {
+        if (child.id == R.id.fab_) {
             fab = child as FloatingActionButton
         }
     }

@@ -40,7 +40,7 @@ open class FeatureDiscoveryFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_feature_dicovery, container, false)
+        return inflater.inflate(R.layout.fragment_feature_dicovery_, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -52,12 +52,13 @@ open class FeatureDiscoveryFragment : Fragment() {
         val message = arguments.getInt(ARGS_MESSAGE)
 
         val v = view as FeatureDiscoveryView?
-        v!!.setIcon(iconRes)
-        v.setTapListener(listener)
-        v.setTitle(title)
-        v.setMessage(message)
-
-        show(v, centerX, centerY)
+        v?.apply {
+            setIcon(iconRes)
+            setTapListener(listener)
+            setTitle(title)
+            setMessage(message)
+            show(v, centerX, centerY)
+        }
     }
 
     private fun show(v: FeatureDiscoveryView, centerX: Int, centerY: Int) {
@@ -74,20 +75,24 @@ open class FeatureDiscoveryFragment : Fragment() {
 
     fun dismissByInteraction() {
         val v = view as FeatureDiscoveryView?
-        v!!.startInteractionAnimation(object : SimpleAnimatorListener() {
-            override fun onAnimationEnd(animation: Animator) {
-                removeFromManager()
-            }
-        })
+        v?.apply {
+            startInteractionAnimation(object : SimpleAnimatorListener() {
+                override fun onAnimationEnd(animation: Animator) {
+                    removeFromManager()
+                }
+            })
+        }
     }
 
     fun dismiss() {
         val v = view as FeatureDiscoveryView?
-        v!!.startDismissAnimation(object : SimpleAnimatorListener() {
-            override fun onAnimationEnd(animation: Animator) {
-                removeFromManager()
-            }
-        })
+        v?.apply {
+            startDismissAnimation(object : SimpleAnimatorListener() {
+                override fun onAnimationEnd(animation: Animator) {
+                    removeFromManager()
+                }
+            })
+        }
     }
 
     fun setListener(listener: FeatureDiscoveryView.TapListener) {

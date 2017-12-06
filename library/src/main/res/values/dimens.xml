@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="feature_discovery_inner_radius">44dp</dimen>
-    <dimen name="feature_discovery_text_padding_vertical">20dp</dimen>
-    <dimen name="feature_discovery_text_padding_horizontal">40dp</dimen>
+    <dimen name="feature_discovery_inner_radius_">44dp</dimen>
+    <dimen name="feature_discovery_text_padding_vertical_">20dp</dimen>
+    <dimen name="feature_discovery_text_padding_horizontal_">40dp</dimen>
 
-    <dimen name="text_size_title_material_dense">21sp</dimen>
-    <dimen name="text_size_subhead_material_dense">17sp</dimen>
-    <dimen name="text_size_body_2_material_dense">15sp</dimen>
-    <dimen name="text_size_body_1_material_dense">15sp</dimen>
-    <dimen name="text_size_caption_material_dense">13sp</dimen>
-    <dimen name="text_size_button_material_dense">15sp</dimen>
+    <dimen name="text_size_title_material_dense_">21sp</dimen>
+    <dimen name="text_size_subhead_material_dense_">17sp</dimen>
+    <dimen name="text_size_body_2_material_dense_">15sp</dimen>
+    <dimen name="text_size_body_1_material_dense_">15sp</dimen>
+    <dimen name="text_size_caption_material_dense_">13sp</dimen>
+    <dimen name="text_size_button_material_dense_">15sp</dimen>
 </resources>
