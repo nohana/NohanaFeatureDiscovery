@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feature_discovery_inner_radius_">44dp</dimen>
+    <dimen name="feature_discovery_text_padding_vertical_">20dp</dimen>
+    <dimen name="feature_discovery_text_padding_horizontal_">40dp</dimen>
+</resources>
