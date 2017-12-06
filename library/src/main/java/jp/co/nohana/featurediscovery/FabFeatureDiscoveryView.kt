@@ -29,8 +29,10 @@ class FabFeatureDiscoveryView @JvmOverloads constructor(context: Context, attrs:
         }
         val pivotX = pivotX.toInt()
         val pivotY = pivotY.toInt()
-        fab?.layout(pivotX - fab!!.measuredWidth / 2, pivotY - fab!!.measuredHeight / 2,
-                pivotX + fab!!.measuredWidth / 2, pivotY + fab!!.measuredHeight / 2)
+        fab?.let {
+            it.layout(pivotX - it.measuredWidth / 2, pivotY - it.measuredHeight / 2,
+                    pivotX + it.measuredWidth / 2, pivotY + it.measuredHeight / 2)
+        }
     }
 
     override fun setIcon(@DrawableRes iconRes: Int) {
