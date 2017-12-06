@@ -27,8 +27,10 @@ class FABFeatureDiscoveryFragment : FeatureDiscoveryFragment() {
     }
 
     companion object {
+        @JvmStatic
         val TAG: String = FABFeatureDiscoveryFragment::class.java.simpleName
 
+        @JvmStatic
         fun newInstance(centerX: Int, centerY: Int, @DrawableRes icon: Int, @StringRes title: Int, @StringRes message: Int): FABFeatureDiscoveryFragment {
             val fragment = FABFeatureDiscoveryFragment()
             val bundle = Bundle().apply {

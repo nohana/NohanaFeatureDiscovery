@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver
 open class FeatureDiscoveryFragment : Fragment() {
 
     companion object {
+        @JvmStatic
         val TAG: String = FeatureDiscoveryFragment::class.java.simpleName
 
         val ARGS_CENTER_X = StringBuilder().append(FeatureDiscoveryFragment::class.java.canonicalName).append(".").append("ARGS_CENTER_X").toString()
@@ -21,6 +22,7 @@ open class FeatureDiscoveryFragment : Fragment() {
         val ARGS_TITLE = StringBuilder().append(FeatureDiscoveryFragment::class.java.canonicalName).append(".").append("ARGS_TITLE").toString()
         val ARGS_MESSAGE = StringBuilder().append(FeatureDiscoveryFragment::class.java.canonicalName).append(".").append("ARGS_MESSAGE").toString()
 
+        @JvmStatic
         fun newInstance(centerX: Int, centerY: Int, @DrawableRes icon: Int, @StringRes title: Int, @StringRes message: Int): FeatureDiscoveryFragment {
             val fragment = FeatureDiscoveryFragment()
             val bundle = Bundle().apply {
