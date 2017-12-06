@@ -33,8 +33,16 @@ class SampleActivity : AppCompatActivity() {
     }
 
     private fun showFeatureDiscovery(manager: FragmentManager, centerX: Int, centerY: Int) {
-        val fragment = FABFeatureDiscoveryFragment.newInstance(centerX, centerY,
-                R.drawable.ic_add, R.string.title, R.string.description)
+        val fragment = FABFeatureDiscoveryFragment.newInstance(centerX, centerY, R.drawable.ic_add, R.string.title, R.string.description)
+        fragment.setListener(object : FeatureDiscoveryView.TapListener {
+            override fun onTapTarget() {
+                fragment.dismissByInteraction()
+            }
+
+            override fun onTapOutSide() {
+                fragment.dismiss()
+            }
+        })
         manager.beginTransaction()
                 .add(R.id.content, fragment, FABFeatureDiscoveryFragment.TAG)
                 .commit()
