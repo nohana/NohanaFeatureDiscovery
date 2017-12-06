@@ -7,8 +7,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/feature_discovery_text_padding_horizontal_"
         android:paddingRight="@dimen/feature_discovery_text_padding_horizontal_"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Dense_"
-        android:textColor="@color/textColorPrimaryDark_"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="?android:textColorPrimaryInverse"
         android:visibility="invisible" />
 
     <TextView
@@ -18,7 +18,7 @@
         android:paddingLeft="@dimen/feature_discovery_text_padding_horizontal_"
         android:paddingRight="@dimen/feature_discovery_text_padding_horizontal_"
         android:paddingTop="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1.Dense_"
-        android:textColor="@color/textColorSecondaryDark_"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?android:textColorSecondaryInverse"
         android:visibility="invisible" />
 </merge>

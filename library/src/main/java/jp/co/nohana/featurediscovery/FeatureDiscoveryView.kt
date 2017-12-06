@@ -24,22 +24,21 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 
+private const val EFFECT_FIRST_DELAY = 1000L
+private const val EFFECT_DELAY = 4000L
+private const val OUTER_ALPHA = 0xF5
+private const val EFFECT_ALPHA = 0x80
+private const val INNER_MAX_SCALE = 1.1F
+private const val EFFECT_MAX_SCALE = 2.0F
+
 open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
 
     private val task = object : Runnable {
         override fun run() {
             createIdleAnimation().start()
-            postDelayed(this, effectDelay)
+            postDelayed(this, EFFECT_DELAY)
         }
     }
-
-    private val effectFirstDelay: Long = 1000
-    private val effectDelay: Long = 4000
-    private val outerAlpha = 0xF5
-    private val effectAlpha = 0x80
-    private val innerMaxScale = 1.1F
-    private val effectMaxScale = 2.0F
-
     private val clipRadius: Int = resources.getDimensionPixelSize(R.dimen.feature_discovery_inner_radius_)
     private val textVerticalPadding: Int = resources.getDimensionPixelSize(R.dimen.feature_discovery_text_padding_vertical_)
 
@@ -68,12 +67,12 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     init {
         outerCircleDrawable = ShapeDrawable(OvalShape())
         outerCircleDrawable.setColorFilter(getColorPrimary(), PorterDuff.Mode.SRC_IN)
-        outerCircleDrawable.alpha = outerAlpha
+        outerCircleDrawable.alpha = OUTER_ALPHA
         innerCircleDrawable = ShapeDrawable(OvalShape())
         innerCircleDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
         effectCircleDrawable = ShapeDrawable(OvalShape())
         effectCircleDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
-        effectCircleDrawable.alpha = effectAlpha
+        effectCircleDrawable.alpha = EFFECT_ALPHA
 
         gestureDetector = GestureDetector(getContext(), SingleTapGestureListener())
         setWillNotDraw(false)
@@ -204,7 +203,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     fun startShowAnimation() {
         title?.visibility = View.INVISIBLE
         message?.visibility = View.INVISIBLE
-        outerCircleDrawable.alpha = outerAlpha
+        outerCircleDrawable.alpha = OUTER_ALPHA
 
         val animator = ValueAnimator.ofFloat(0f, 1f)
         animator.interpolator = DecelerateInterpolator()
@@ -224,7 +223,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         val set = AnimatorSet()
         set.play(animator).before(createIdleAnimation())
         set.start()
-        postDelayed(task, effectDelay)
+        postDelayed(task, EFFECT_DELAY)
     }
 
     fun startInteractionAnimation(listener: Animator.AnimatorListener?) {
@@ -236,11 +235,11 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         animator.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
         animator.addUpdateListener { animation ->
             innerScale = animation.animatedValueAsFloat()
-            outerCircleDrawable.alpha = (outerAlpha * animation.animatedValueAsFloat()).toInt()
+            outerCircleDrawable.alpha = (OUTER_ALPHA * animation.animatedValueAsFloat()).toInt()
             outerScale = 1.1f - animation.animatedValueAsFloat() / 10
             postInvalidateOnAnimation()
         }
-        listener?.let { animator.addListener(listener) }
+        listener?.let { animator.addListener(it) }
         animator.start()
     }
 
@@ -254,7 +253,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         animator.addUpdateListener { animation ->
             innerScale = animation.animatedValueAsFloat()
             outerScale = animation.animatedValueAsFloat()
-            outerCircleDrawable.alpha = (outerAlpha * animation.animatedValueAsFloat()).toInt()
+            outerCircleDrawable.alpha = (OUTER_ALPHA * animation.animatedValueAsFloat()).toInt()
             postInvalidateOnAnimation()
         }
         if (listener != null) {
@@ -266,7 +265,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     private fun createIdleAnimation(): Animator {
         //idle animation runs twice
         val idleAnimator = createSingleIdleAnimation()
-        idleAnimator.startDelay = effectFirstDelay
+        idleAnimator.startDelay = EFFECT_FIRST_DELAY
         val idleAnimator2 = createSingleIdleAnimation()
 
         val set = AnimatorSet()
@@ -275,7 +274,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     }
 
     private fun createSingleIdleAnimation(): Animator {
-        val innerCircleExpandAnimator = ValueAnimator.ofFloat(1f, innerMaxScale)
+        val innerCircleExpandAnimator = ValueAnimator.ofFloat(1f, INNER_MAX_SCALE)
         innerCircleExpandAnimator.interpolator = AccelerateDecelerateInterpolator()
         innerCircleExpandAnimator.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
         innerCircleExpandAnimator.addUpdateListener { animation ->
@@ -283,7 +282,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
             postInvalidateOnAnimation()
         }
 
-        val innerCircleShrinkAnimator = ValueAnimator.ofFloat(innerMaxScale, 1f)
+        val innerCircleShrinkAnimator = ValueAnimator.ofFloat(INNER_MAX_SCALE, 1f)
         innerCircleShrinkAnimator.interpolator = AccelerateDecelerateInterpolator()
         innerCircleShrinkAnimator.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
         innerCircleShrinkAnimator.addUpdateListener { animation ->
@@ -297,9 +296,9 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         innerCircleEffectAnimator.addUpdateListener { animation ->
             val value = animation.animatedValueAsFloat()
             //animate scale innerMaxScale -> effectMaxScale
-            effectScale = innerMaxScale + (effectMaxScale - innerMaxScale) * value
+            effectScale = INNER_MAX_SCALE + (EFFECT_MAX_SCALE - INNER_MAX_SCALE) * value
             //animate alpha effectAlpha(128) -> 0
-            effectCircleDrawable.alpha = (effectAlpha * (1 - value)).toInt()
+            effectCircleDrawable.alpha = (EFFECT_ALPHA * (1 - value)).toInt()
             postInvalidateOnAnimation()
         }
         innerCircleEffectAnimator.addListener(object : SimpleAnimatorListener() {
@@ -326,8 +325,8 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
             pivotX
         }
         title?.let {
-            if (title!!.measuredHeight == 0) {
-                title?.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
+            if (it.measuredHeight == 0) {
+                it.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
                 message?.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
