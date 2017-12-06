@@ -14,20 +14,16 @@ class FABFeatureDiscoveryFragment : FeatureDiscoveryFragment() {
     }
 
     override fun removeFromManager() {
-        if (fragmentManager == null) {
-            //happens when double click back key
-            return
-        }
+        //happens when double click back key
+        fragmentManager ?: return
         val fragment = fragmentManager.findFragmentByTag(FABFeatureDiscoveryFragment.TAG)
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .remove(fragment)
-                    .commitAllowingStateLoss()
-        }
+        fragment ?: return
+        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+
     }
 
     companion object {
-        @JvmStatic
+        @JvmField
         val TAG: String = FABFeatureDiscoveryFragment::class.java.simpleName
 
         @JvmStatic

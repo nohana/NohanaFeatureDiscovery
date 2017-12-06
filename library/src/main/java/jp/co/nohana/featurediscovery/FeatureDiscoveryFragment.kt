@@ -12,8 +12,10 @@ import android.view.ViewTreeObserver
 
 open class FeatureDiscoveryFragment : Fragment() {
 
+    private var listener: FeatureDiscoveryView.TapListener? = null
+
     companion object {
-        @JvmStatic
+        @JvmField
         val TAG: String = FeatureDiscoveryFragment::class.java.simpleName
 
         val ARGS_CENTER_X = StringBuilder().append(FeatureDiscoveryFragment::class.java.canonicalName).append(".").append("ARGS_CENTER_X").toString()
@@ -51,15 +53,7 @@ open class FeatureDiscoveryFragment : Fragment() {
 
         val v = view as FeatureDiscoveryView?
         v!!.setIcon(iconRes)
-        v.setTapListener(object : FeatureDiscoveryView.TapListener {
-            override fun onTapTarget() {
-                dismissByInteraction()
-            }
-
-            override fun onTapOutSide() {
-                dismiss()
-            }
-        })
+        v.setTapListener(listener)
         v.setTitle(title)
         v.setMessage(message)
 
@@ -96,12 +90,13 @@ open class FeatureDiscoveryFragment : Fragment() {
         })
     }
 
+    fun setListener(listener: FeatureDiscoveryView.TapListener) {
+        this.listener = listener
+    }
+
     protected open fun removeFromManager() {
         val fragment = fragmentManager.findFragmentByTag(FeatureDiscoveryFragment.TAG)
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .remove(fragment)
-                    .commitAllowingStateLoss()
-        }
+        fragment ?: return
+        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
     }
 }

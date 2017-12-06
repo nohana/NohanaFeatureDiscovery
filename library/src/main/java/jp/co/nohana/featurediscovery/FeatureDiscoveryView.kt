@@ -26,6 +26,15 @@ import android.widget.TextView
 
 open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
 
+    companion object {
+        private val EFFECT_FIRST_DELAY = 1000
+        private val EFFECT_DELAY = 4000
+        private val OUTER_ALPHA = 0xF5
+        private val EFFECT_ALPHA = 0x80
+        private val INNER_MAX_SCALE = 1.1f
+        private val EFFECT_MAX_SCALE = 2.0f
+    }
+
     private val task = object : Runnable {
         override fun run() {
             createIdleAnimation().start()
@@ -33,17 +42,17 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         }
     }
 
-    private val clipRadius: Int
-    private val textVerticalPadding: Int
+    private val clipRadius: Int = resources.getDimensionPixelSize(R.dimen.feature_discovery_inner_radius)
+    private val textVerticalPadding: Int = resources.getDimensionPixelSize(R.dimen.feature_discovery_text_padding_vertical)
 
     private var icon: Drawable? = null
     private val outerCircleDrawable: Drawable
     private val innerCircleDrawable: Drawable
     private val effectCircleDrawable: Drawable
 
-    internal var innerScale: Float = 0.toFloat()
-    internal var effectScale: Float = 0.toFloat()
-    internal var mOuterScale: Float = 0.toFloat()
+    private var innerScale: Float = 0.toFloat()
+    private var effectScale: Float = 0.toFloat()
+    private var outerScale: Float = 0.toFloat()
 
     private var title: TextView? = null
     private var message: TextView? = null
@@ -60,9 +69,6 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         }
 
     init {
-        clipRadius = resources.getDimensionPixelSize(R.dimen.feature_discovery_inner_radius)
-        textVerticalPadding = resources.getDimensionPixelSize(R.dimen.feature_discovery_text_padding_vertical)
-
         outerCircleDrawable = ShapeDrawable(OvalShape())
         outerCircleDrawable.setColorFilter(colorPrimary, PorterDuff.Mode.SRC_IN)
         outerCircleDrawable.alpha = OUTER_ALPHA
@@ -103,9 +109,8 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        for (i in 0 until childCount) {
-            val v = getChildAt(i)
-            measureChildWithMargins(v, widthMeasureSpec, 0,
+        (0 until childCount).map { getChildAt(it) }.forEach {
+            measureChildWithMargins(it, widthMeasureSpec, 0,
                     heightMeasureSpec, textVerticalPadding * 2)
         }
     }
@@ -118,17 +123,17 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         if (pivotY < (b - t) / 2) {
             //layout below pivot
             val top = pivotY + clipRadius + textVerticalPadding
-            var right = Math.min(r, l + title!!.measuredWidth)
-            title!!.layout(l, top, right, top + +title!!.measuredHeight)
-            right = Math.min(r, l + message!!.measuredWidth)
-            message!!.layout(l, title!!.bottom, right, title!!.bottom + message!!.measuredHeight)
+            var right = Math.min(r, l + (title?.measuredWidth ?: 0))
+            title?.layout(l, top, right, top + +(title?.measuredHeight ?: 0))
+            right = Math.min(r, l + (message?.measuredWidth ?: 0))
+            message?.layout(l, (title?.bottom ?: 0), right, (title?.bottom ?: 0) + +(message?.measuredHeight ?: 0))
         } else {
             //layout above pivot
             val bottom = pivotY - clipRadius - textVerticalPadding
-            var right = Math.min(r, l + message!!.measuredWidth)
-            message!!.layout(l, bottom - message!!.measuredHeight, right, bottom)
-            right = Math.min(r, l + title!!.measuredWidth)
-            title!!.layout(l, message!!.top - title!!.measuredHeight, right, message!!.top)
+            var right = Math.min(r, l + (message?.measuredHeight ?: 0))
+            message?.layout(l, bottom - (message?.measuredHeight ?: 0), right, bottom)
+            right = Math.min(r, l + (title?.measuredWidth ?: 0))
+            title?.layout(l, (message?.top ?: 0) - (title?.measuredHeight ?: 0), right, (message?.top ?: 0))
         }
     }
 
@@ -157,7 +162,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         val pivotY = pivotY.toInt()
 
         var saveCount = canvas.save()
-        canvas.scale(mOuterScale, mOuterScale, pivotX.toFloat(), pivotY.toFloat())
+        canvas.scale(outerScale, outerScale, pivotX.toFloat(), pivotY.toFloat())
         outerCircleDrawable.draw(canvas)
         canvas.restoreToCount(saveCount)
 
@@ -171,7 +176,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         effectCircleDrawable.draw(canvas)
         canvas.restoreToCount(saveCount)
 
-        icon!!.draw(canvas)
+        icon?.draw(canvas)
 
         super.draw(canvas)
     }
@@ -181,7 +186,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         return true
     }
 
-    fun setTapListener(listener: TapListener) {
+    fun setTapListener(listener: TapListener?) {
         this.listener = listener
     }
 
@@ -192,30 +197,30 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     }
 
     fun setTitle(@StringRes titleRes: Int) {
-        title!!.setText(titleRes)
+        title?.setText(titleRes)
     }
 
     fun setMessage(@StringRes messageRes: Int) {
-        message!!.setText(messageRes)
+        message?.setText(messageRes)
     }
 
     fun startShowAnimation() {
-        title!!.visibility = View.INVISIBLE
-        message!!.visibility = View.INVISIBLE
+        title?.visibility = View.INVISIBLE
+        message?.visibility = View.INVISIBLE
         outerCircleDrawable.alpha = OUTER_ALPHA
 
         val animator = ValueAnimator.ofFloat(0f, 1f)
         animator.interpolator = DecelerateInterpolator()
         animator.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
         animator.addUpdateListener { animation ->
-            mOuterScale = animation.animatedValue as Float
+            outerScale = animation.animatedValue as Float
             innerScale = animation.animatedValue as Float
             postInvalidateOnAnimation()
         }
         animator.addListener(object : SimpleAnimatorListener() {
             override fun onAnimationEnd(animation: Animator) {
-                title!!.visibility = View.VISIBLE
-                message!!.visibility = View.VISIBLE
+                title?.visibility = View.VISIBLE
+                message?.visibility = View.VISIBLE
             }
         })
 
@@ -226,8 +231,8 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     }
 
     fun startInteractionAnimation(listener: Animator.AnimatorListener?) {
-        title!!.visibility = View.INVISIBLE
-        message!!.visibility = View.INVISIBLE
+        title?.visibility = View.INVISIBLE
+        message?.visibility = View.INVISIBLE
 
         val animator = ValueAnimator.ofFloat(1f, 0f)
         animator.interpolator = AccelerateInterpolator()
@@ -235,25 +240,23 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         animator.addUpdateListener { animation ->
             innerScale = animation.animatedValue as Float
             outerCircleDrawable.alpha = (OUTER_ALPHA * animation.animatedValue as Float).toInt()
-            mOuterScale = 1.1f - animation.animatedValue as Float / 10
+            outerScale = 1.1f - animation.animatedValue as Float / 10
             postInvalidateOnAnimation()
         }
-        if (listener != null) {
-            animator.addListener(listener)
-        }
+        listener?.let { animator.addListener(listener) }
         animator.start()
     }
 
     fun startDismissAnimation(listener: Animator.AnimatorListener?) {
-        title!!.visibility = View.INVISIBLE
-        message!!.visibility = View.INVISIBLE
+        title?.visibility = View.INVISIBLE
+        message?.visibility = View.INVISIBLE
 
         val animator = ValueAnimator.ofFloat(1f, 0f)
         animator.interpolator = AccelerateInterpolator()
         animator.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
         animator.addUpdateListener { animation ->
             innerScale = animation.animatedValue as Float
-            mOuterScale = animation.animatedValue as Float
+            outerScale = animation.animatedValue as Float
             outerCircleDrawable.alpha = (OUTER_ALPHA * animation.animatedValue as Float).toInt()
             postInvalidateOnAnimation()
         }
@@ -319,20 +322,21 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         val pivotY = pivotY.toInt()
 
         //1. calc radius
-        val width: Int
         val displayWidth = resources.displayMetrics.widthPixels
-        if (pivotX < displayWidth / 2) {
-            width = displayWidth - pivotX
+        val width = if (pivotX < displayWidth / 2) {
+            displayWidth - pivotX
         } else {
-            width = pivotX
+            pivotX
         }
-        if (title!!.measuredHeight == 0) {
-            title!!.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-            message!!.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        title?.let {
+            if (title!!.measuredHeight == 0) {
+                title?.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                message?.measure(View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+            }
         }
-        val textHeight = title!!.measuredHeight + message!!.measuredHeight
+        val textHeight = (title?.measuredHeight ?: 0) + (message?.measuredHeight ?: 0)
         val height = clipRadius + textVerticalPadding + textHeight
         val radius = Math.sqrt((width * width + height * height).toDouble()).toInt()
 
@@ -343,7 +347,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
                 pivotX + clipRadius, pivotY + clipRadius)
         effectCircleDrawable.setBounds(pivotX - clipRadius, pivotY - clipRadius,
                 pivotX + clipRadius, pivotY + clipRadius)
-        icon!!.setBounds(pivotX - icon!!.intrinsicWidth / 2, getPivotY().toInt() - icon!!.intrinsicHeight / 2,
+        icon?.setBounds(pivotX - icon!!.intrinsicWidth / 2, getPivotY().toInt() - icon!!.intrinsicHeight / 2,
                 pivotX + icon!!.intrinsicWidth / 2, getPivotY().toInt() + icon!!.intrinsicHeight / 2)
     }
 
@@ -363,16 +367,14 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         override fun onShowPress(e: MotionEvent) {}
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            if (listener != null) {
-                val distance = Math.hypot((e.x - pivotX).toDouble(), (e.y - pivotY).toDouble())
-                if (distance < clipRadius) {
-                    listener!!.onTapTarget()
-                } else {
-                    listener!!.onTapOutSide()
-                }
-                return true
+            listener ?: return false
+            val distance = Math.hypot((e.x - pivotX).toDouble(), (e.y - pivotY).toDouble())
+            if (distance < clipRadius) {
+                listener!!.onTapTarget()
+            } else {
+                listener!!.onTapOutSide()
             }
-            return false
+            return true
         }
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
@@ -384,14 +386,5 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             return false
         }
-    }
-
-    companion object {
-        private val EFFECT_FIRST_DELAY = 1000
-        private val EFFECT_DELAY = 4000
-        private val OUTER_ALPHA = 0xF5
-        private val EFFECT_ALPHA = 0x80
-        private val INNER_MAX_SCALE = 1.1f
-        private val EFFECT_MAX_SCALE = 2.0f
     }
 }
