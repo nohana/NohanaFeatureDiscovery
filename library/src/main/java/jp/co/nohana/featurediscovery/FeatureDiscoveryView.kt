@@ -130,7 +130,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
         } else {
             //layout above pivot
             val bottom = pivotY - clipRadius - textVerticalPadding
-            var right = Math.min(r, l + (message?.measuredHeight ?: 0))
+            var right = Math.min(r, l + (message?.measuredWidth ?: 0))
             message?.layout(l, bottom - (message?.measuredHeight ?: 0), right, bottom)
             right = Math.min(r, l + (title?.measuredWidth ?: 0))
             title?.layout(l, (message?.top ?: 0) - (title?.measuredHeight ?: 0), right, (message?.top ?: 0))
