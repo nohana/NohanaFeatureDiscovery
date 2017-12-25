@@ -1,6 +1,7 @@
 package jp.co.nohana.featurediscovery
 
 import android.animation.Animator
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
@@ -61,6 +62,18 @@ open class FeatureDiscoveryFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is FeatureDiscoveryView.TapListener) {
+            listener = context
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
     private fun show(v: FeatureDiscoveryView, centerX: Int, centerY: Int) {
         v.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -93,10 +106,6 @@ open class FeatureDiscoveryFragment : Fragment() {
                 }
             })
         }
-    }
-
-    fun setListener(listener: FeatureDiscoveryView.TapListener) {
-        this.listener = listener
     }
 
     protected open fun removeFromManager() {
