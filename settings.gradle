@@ -1,1 +1,1 @@
-include ':app', ':FeatureDiscovery'
+include ':Sample', ':FeatureDiscovery'
