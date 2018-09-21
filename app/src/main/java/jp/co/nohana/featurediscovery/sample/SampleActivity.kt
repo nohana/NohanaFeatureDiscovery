@@ -1,10 +1,13 @@
-package jp.co.nohana.featurediscovery
+package jp.co.nohana.featurediscovery.sample
 
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import jp.co.nohana.featurediscovery.FABFeatureDiscoveryFragment
+import jp.co.nohana.featurediscovery.FeatureDiscoveryFragment
+import jp.co.nohana.featurediscovery.FeatureDiscoveryView
 import kotlinx.android.synthetic.main.activity_sample.*
 
 
