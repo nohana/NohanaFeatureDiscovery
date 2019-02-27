@@ -16,9 +16,9 @@ class FABFeatureDiscoveryFragment : FeatureDiscoveryFragment() {
     override fun removeFromManager() {
         //happens when double click back key
         fragmentManager ?: return
-        val fragment = fragmentManager.findFragmentByTag(FABFeatureDiscoveryFragment.TAG)
+        val fragment = fragmentManager!!.findFragmentByTag(FABFeatureDiscoveryFragment.TAG)
         fragment ?: return
-        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+        fragmentManager!!.beginTransaction().remove(fragment).commitAllowingStateLoss()
 
     }
 

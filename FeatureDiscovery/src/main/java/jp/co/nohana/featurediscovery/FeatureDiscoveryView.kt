@@ -187,7 +187,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     }
 
     open fun setIcon(@DrawableRes iconRes: Int) {
-        val icon = DrawableCompat.wrap(ContextCompat.getDrawable(context, iconRes)).mutate()
+        val icon = DrawableCompat.wrap(ContextCompat.getDrawable(context, iconRes)!!).mutate()
         DrawableCompat.setTint(icon, getColorPrimary())
         this.icon = icon
     }

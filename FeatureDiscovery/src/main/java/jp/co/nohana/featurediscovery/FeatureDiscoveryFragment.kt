@@ -46,11 +46,11 @@ open class FeatureDiscoveryFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val centerX = arguments.getInt(ARGS_CENTER_X)
-        val centerY = arguments.getInt(ARGS_CENTER_Y)
-        val iconRes = arguments.getInt(ARGS_ICON)
-        val title = arguments.getInt(ARGS_TITLE)
-        val message = arguments.getInt(ARGS_MESSAGE)
+        val centerX = arguments!!.getInt(ARGS_CENTER_X)
+        val centerY = arguments!!.getInt(ARGS_CENTER_Y)
+        val iconRes = arguments!!.getInt(ARGS_ICON)
+        val title = arguments!!.getInt(ARGS_TITLE)
+        val message = arguments!!.getInt(ARGS_MESSAGE)
 
         val v = view as FeatureDiscoveryView?
         v?.apply {
@@ -109,8 +109,8 @@ open class FeatureDiscoveryFragment : Fragment() {
     }
 
     protected open fun removeFromManager() {
-        val fragment = fragmentManager.findFragmentByTag(FeatureDiscoveryFragment.TAG)
+        val fragment = fragmentManager!!.findFragmentByTag(FeatureDiscoveryFragment.TAG)
         fragment ?: return
-        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+        fragmentManager!!.beginTransaction().remove(fragment).commitAllowingStateLoss()
     }
 }
