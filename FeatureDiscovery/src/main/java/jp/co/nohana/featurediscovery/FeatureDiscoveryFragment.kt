@@ -3,9 +3,9 @@ package jp.co.nohana.featurediscovery
 import android.animation.Animator
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +62,7 @@ open class FeatureDiscoveryFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is FeatureDiscoveryView.TapListener) {
             listener = context

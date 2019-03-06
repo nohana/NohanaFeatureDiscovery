@@ -1,8 +1,8 @@
 package jp.co.nohana.featurediscovery
 
 import android.content.Context
-import android.support.annotation.DrawableRes
-import android.support.design.widget.FloatingActionButton
+import androidx.annotation.DrawableRes
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
