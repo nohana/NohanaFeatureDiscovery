@@ -1,8 +1,8 @@
 package jp.co.nohana.featurediscovery
 
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +16,9 @@ class FABFeatureDiscoveryFragment : FeatureDiscoveryFragment() {
     override fun removeFromManager() {
         //happens when double click back key
         fragmentManager ?: return
-        val fragment = fragmentManager.findFragmentByTag(FABFeatureDiscoveryFragment.TAG)
+        val fragment = fragmentManager!!.findFragmentByTag(FABFeatureDiscoveryFragment.TAG)
         fragment ?: return
-        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+        fragmentManager!!.beginTransaction().remove(fragment).commitAllowingStateLoss()
 
     }
 

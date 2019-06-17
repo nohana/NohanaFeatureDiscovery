@@ -10,11 +10,11 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.*
@@ -187,7 +187,7 @@ open class FeatureDiscoveryView @JvmOverloads constructor(context: Context, attr
     }
 
     open fun setIcon(@DrawableRes iconRes: Int) {
-        val icon = DrawableCompat.wrap(ContextCompat.getDrawable(context, iconRes)).mutate()
+        val icon = DrawableCompat.wrap(ContextCompat.getDrawable(context, iconRes)!!).mutate()
         DrawableCompat.setTint(icon, getColorPrimary())
         this.icon = icon
     }
