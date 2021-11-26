@@ -3,13 +3,13 @@ package jp.co.nohana.featurediscovery
 import android.animation.Animator
 import android.content.Context
 import android.os.Bundle
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 
 open class FeatureDiscoveryFragment : Fragment() {
 
@@ -109,8 +109,10 @@ open class FeatureDiscoveryFragment : Fragment() {
     }
 
     protected open fun removeFromManager() {
-        val fragment = fragmentManager!!.findFragmentByTag(FeatureDiscoveryFragment.TAG)
-        fragment ?: return
-        fragmentManager!!.beginTransaction().remove(fragment).commitAllowingStateLoss()
+        val fragmentManager = fragmentManager
+                ?: return
+        val fragment = fragmentManager.findFragmentByTag(TAG)
+                ?: return
+        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
     }
 }
